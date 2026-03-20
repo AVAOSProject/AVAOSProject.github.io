@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVA OS | The Performance Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Inter:wght@400;900&display=swap');
+
+        :root {
+            --ava-blue: #0062ff;
+            --ava-bg: #030303;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--ava-bg);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .font-ava { font-family: 'Space Grotesk', sans-serif; }
+
+        /* Construction Overlay Styles */
+        #construction-layer {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Dynamic Expanding Button v0.3 */
+        .btn-ava-main {
+            position: relative;
+            background: var(--ava-blue);
+            padding: 1.25rem 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-version {
+            max-width: 0;
+            opacity: 0;
+            margin-left: 0;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            color: rgba(255, 255, 255, 0.5); 
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .btn-ava-main:hover {
+            padding-right: 3.5rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-ava-main:hover .btn-version {
+            max-width: 100px;
+            opacity: 1;
+            margin-left: 15px;
+            color: #000000;
+        }
+
+        .hud-border {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-link {
+            position: relative;
+            transition: color 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: -4px; left: 0;
+            background-color: var(--ava-blue);
+            transition: width 0.3s ease;
+        }
+        .footer-link:hover::after { width: 100%; }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .tech-tag {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border: 1px solid rgba(0, 98, 255, 0.3);
+            color: var(--ava-blue);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="construction-layer">
+        <div class="font-ava text-4xl font-bold mb-4 tracking-tighter">AVA<span class="text-blue-600">OS</span></div>
+        <div class="text-[10px] font-bold tracking-[0.5em] text-gray-500 uppercase mb-8">System Offline</div>
+        <h2 class="text-5xl md:text-7xl font-black uppercase mb-4">Under Construction</h2>
+        <p class="text-gray-400 max-w-md mx-auto text-sm px-6">The AVA OS Project is currently undergoing updates. Deployment will resume shortly.</p>
+    </div>
+
+    <div id="main-site">
+        <nav class="fixed w-full z-50 p-8 flex justify-between items-center mix-blend-difference">
+            <div class="font-ava font-bold text-3xl tracking-tighter">AVA<span class="text-blue-600">OS</span></div>
+            <div class="flex gap-8 items-center">
+                <a href="https://amelabs.net/" target="_blank" class="text-[10px] font-bold tracking-[0.3em] uppercase opacity-50 hover:opacity-100 transition no-underline text-white">AME Labs</a>
+                <a href="#download" class="bg-white text-black px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-105 no-underline">Download</a>
+            </div>
+        </nav>
+
+        <section class="h-screen flex flex-col justify-center items-center px-6 relative overflow-hidden">
+            <div class="absolute inset-0 z-0 flex items-center justify-center">
+                <h2 class="text-[25vw] font-black opacity-[0.02] select-none uppercase font-ava">AVA</h2>
+            </div>
+            <div data-aos="fade-up" class="z-10 text-center">
+                <h1 class="font-ava text-8xl md:text-[12rem] font-bold leading-none tracking-tighter mb-4">AVA <span class="text-blue-600">OS</span></h1>
+                <p class="text-gray-500 uppercase tracking-[0.5em] text-xs font-bold mb-12">The Apex Performance Project</p>
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <a href="#download" class="btn-ava-main">
+                        <span>Get Playbook</span>
+                        <span class="btn-version">v0.3</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-10 max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <span class="tech-tag">Technical Overview</span>
+                    <h2 class="font-ava text-5xl font-bold mt-6 mb-8 uppercase leading-tight">What is the <br><span class="text-blue-600">AVA OS Playbook?</span></h2>
+                    <p class="text-gray-400 text-lg mb-6">The Playbook is a precision-engineered configuration file designed for the <strong>AME Wizard</strong>. Unlike traditional "tweaking scripts" that can break dependencies, AVA OS uses a non-destructive approach to decouple Windows services from your hardware.</p>
+                    <ul class="space-y-4 text-sm font-bold uppercase tracking-widest text-gray-500 list-none p-0">
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Native AME .apbx Format</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Reversible Registry Modules</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Targeted Dependency Mapping</li>
+                    </ul>
+                </div>
+                <div class="grid grid-cols-1 gap-4" data-aos="fade-left">
+                    <div class="hud-border p-8">
+                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">01. Service Stripping</h4>
+                        <p class="text-gray-400 text-sm">Disables over 120+ non-essential Windows services including Telemetry, Print Spooler (Optional), and Xbox Live integration.</p>
+                    </div>
+                    <div class="hud-border p-8">
+                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">02. Kernel Optimizations</h4>
+                        <p class="text-gray-400 text-sm">Fine-tunes CPU scheduling and I/O priority to ensure your active application receives 99% of system attention.</p>
+                    </div>
+                    <div class="hud-border p-8">
+                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">03. AppX Removal</h4>
+                        <p class="text-gray-400 text-sm">Purges pre-installed bloatware and background "Universal Windows Platform" apps that consume RAM on standby.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-24 px-10 max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-12 gap-6">
+                <div data-aos="fade-up" class="md:col-span-8 hud-border p-16 rounded-sm">
+                    <h3 class="font-ava text-4xl font-bold mb-6 uppercase">Reclaiming your <span class="text-blue-600">Hardware</span></h3>
+                    <p class="text-gray-400 text-lg leading-relaxed max-w-2xl">Modern Windows installations prioritize data collection over user experience. The AVA OS Project strips away the noise, returning your PC to its raw potential.</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100" class="md:col-span-4 bg-blue-600 p-16 flex flex-col justify-between">
+                    <div class="text-5xl font-black">30+</div>
+                    <div class="text-sm font-bold uppercase tracking-widest leading-tight">Processes <br>Removed</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="py-40 bg-white text-black text-center">
+            <div data-aos="zoom-in" class="max-w-4xl mx-auto px-6">
+                <h2 class="font-ava text-6xl md:text-8xl font-bold tracking-tighter mb-8 uppercase">Deploy AVA OS</h2>
+                <p class="text-gray-600 text-xl mb-12 font-medium">Download the playbook for use with AME Wizard.</p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <a href="Link" class="bg-black text-white px-12 py-5 font-bold uppercase tracking-widest hover:bg-blue-600 transition-all hover:scale-105 no-underline">Download .apbx</a>
+                    <a href="https://amelabs.net/" target="_blank" class="border-2 border-black px-12 py-5 font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all hover:scale-105 no-underline">AME Software</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-black pt-24 pb-12 px-10 border-t border-white/5 overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-16 mb-20">
+                    <div>
+                        <div class="font-ava text-5xl font-bold mb-8 uppercase">AVA<span class="text-blue-600">OS</span></div>
+                        <p class="text-gray-500 max-w-sm mb-8 text-sm leading-relaxed">A community-driven performance project dedicated to creating the cleanest Windows experience possible.</p>
+                        <div class="flex items-center gap-3">
+                            <span class="status-dot"></span>
+                            <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase">Status: v0.3 Optimal</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <h5 class="text-[10px] font-bold tracking-[0.3em] uppercase text-blue-600 mb-6">Project</h5>
+                            <ul class="space-y-4 text-sm font-bold uppercase tracking-widest list-none p-0 text-white">
+                                <li><a href="Link" class="footer-link">Home</a></li>
+                                <li><a href="#download" class="footer-link">Download</a></li>
+                                <li><a href="https://amelabs.net/" target="_blank" class="footer-link">AME Labs</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-[10px] font-bold tracking-[0.3em] uppercase text-blue-600 mb-6">Community</h5>
+                            <ul class="space-y-4 text-sm font-bold uppercase tracking-widest list-none p-0 text-white">
+                                <li><a href="Link" class="footer-link">GitHub</a></li>
+                                <li><a href="Link" class="footer-link">Discord</a></li>
+                                <li><a href="Link" class="footer-link">Support</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5">
+                    <div class="text-[10px] font-bold tracking-[0.5em] text-gray-700 uppercase mb-4 md:mb-0">The AVA OS Project // 2026</div>
+                    <div class="flex gap-12"><span class="text-[10px] font-bold text-gray-700">VERSION_0.3</span><span class="text-[10px] font-bold text-gray-700 uppercase">Deployed Stable</span></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // TOGGLE_CONSTRUCTION: Change 'false' to 'true' to show under construction screen
+        const isUnderConstruction = false; 
+
+        const constructionLayer = document.getElementById('construction-layer');
+        const mainSite = document.getElementById('main-site');
+
+        if (isUnderConstruction) {
+            constructionLayer.style.display = 'flex';
+            mainSite.style.display = 'none';
+        } else {
+            constructionLayer.style.display = 'none';
+            mainSite.style.display = 'block';
+            AOS.init({ duration: 1000, once: false, offset: 50 });
+        }
+
+        const footer = document.querySelector('footer');
+        footer.addEventListener('mousemove', (e) => {
+            const rect = footer.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            footer.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0, 98, 255, 0.08) 0%, transparent 60%)`;
+        });
+    </script>
+</body>
+</html>
