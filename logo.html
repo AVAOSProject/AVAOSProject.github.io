@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVA OS | Asset Export</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+        
+        body {
+            background-color: #080808;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* The specific area we will screenshot */
+        #logo-export-zone {
+            padding: 100px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 10rem;
+            letter-spacing: -0.05em;
+            color: #ffffff;
+            user-select: none;
+            filter: drop-shadow(0 0 40px rgba(0, 98, 255, 0.3));
+        }
+
+        .dot-blue {
+            color: #0062ff;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            z-index: 100;
+        }
+
+        .btn-screenshot {
+            background: #ffffff;
+            color: #000;
+            font-weight: 800;
+            padding: 14px 32px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-screenshot:hover {
+            transform: scale(1.05);
+            background: #0062ff;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 98, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="logo-export-zone">
+        <div class="logo-text">
+            AVA<span class="dot-blue">OS</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-screenshot" onclick="takeScreenshot()">Download PNG</button>
+    </div>
+
+    <script>
+        // Particle Background Logic
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 100; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        // Screenshot Logic
+        function takeScreenshot() {
+            const element = document.getElementById('logo-export-zone');
+            
+            // Temporary hide the background for a cleaner "cutout" if desired
+            // Or keep it as is. Here we capture it with the dark theme.
+            html2canvas(element, {
+                backgroundColor: "#080808",
+                scale: 2 // Double resolution for crispness
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'AVAOS-Logo.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
+    </script>
+</body>
+</html>
