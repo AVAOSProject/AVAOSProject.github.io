@@ -3,279 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA OS | The Performance Project</title>
+    <title>AVA OS | Performance Redefined</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Inter:wght@400;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 
         :root {
-            --ava-blue: #0062ff;
-            --ava-bg: #030303;
+            --atlas-blue: #0062ff;
+            --atlas-bg: #080808;
+            --atlas-card: rgba(17, 17, 17, 0.7);
+            --atlas-border: rgba(255, 255, 255, 0.08);
         }
-
-        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--ava-bg);
-            color: #ffffff;
+            background-color: var(--atlas-bg);
+            color: #eeeeee;
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            letter-spacing: -0.02em;
             margin: 0;
+            overflow-x: hidden;
         }
 
-        .font-ava { font-family: 'Space Grotesk', sans-serif; }
-
-        /* Construction Overlay Styles */
-        #construction-layer {
+        #bg-canvas {
             position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 9999;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        /* Dynamic Expanding Button v0.3 */
-        .btn-ava-main {
-            position: relative;
-            background: var(--ava-blue);
-            padding: 1.25rem 2.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(0, 98, 255, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bento-card {
+            background: var(--atlas-card);
+            border: 1px solid var(--atlas-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+        .bento-card:hover {
+            border-color: rgba(0, 98, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 8px;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            overflow: hidden;
-            white-space: nowrap;
-            color: white;
+            gap: 8px;
+            cursor: pointer;
             text-decoration: none;
         }
+        .btn-primary:hover {
+            background: var(--atlas-blue);
+            color: #fff;
+        }
 
-        .btn-version {
-            max-width: 0;
-            opacity: 0;
-            margin-left: 0;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            color: rgba(255, 255, 255, 0.5); 
-            font-size: 0.8rem;
+        .overlay-blur {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 8, 8, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
             font-weight: 700;
-        }
-
-        .btn-ava-main:hover {
-            padding-right: 3.5rem;
-            background: #ffffff;
-            color: #000000;
-        }
-
-        .btn-ava-main:hover .btn-version {
-            max-width: 100px;
-            opacity: 1;
-            margin-left: 15px;
-            color: #000000;
-        }
-
-        .hud-border {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
 
         .footer-link {
-            position: relative;
-            transition: color 0.3s ease;
+            color: #9ca3af;
+            transition: color 0.2s ease;
             text-decoration: none;
-            color: inherit;
+            font-size: 0.875rem;
         }
-        .footer-link::after {
-            content: '';
-            position: absolute;
-            width: 0; height: 2px;
-            bottom: -4px; left: 0;
-            background-color: var(--ava-blue);
-            transition: width 0.3s ease;
-        }
-        .footer-link:hover::after { width: 100%; }
-
-        .status-dot {
-            width: 8px; height: 8px;
-            background: #00ff88;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #00ff88;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .tech-tag {
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            padding: 4px 12px;
-            border: 1px solid rgba(0, 98, 255, 0.3);
-            color: var(--ava-blue);
-            text-transform: uppercase;
+        .footer-link:hover {
+            color: white;
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <div id="construction-layer">
-        <div class="font-ava text-4xl font-bold mb-4 tracking-tighter">AVA<span class="text-blue-600">OS</span></div>
-        <div class="text-[10px] font-bold tracking-[0.5em] text-gray-500 uppercase mb-8">System Offline</div>
-        <h2 class="text-5xl md:text-7xl font-black uppercase mb-4">Under Construction</h2>
-        <p class="text-gray-400 max-w-md mx-auto text-sm px-6">The AVA OS Project is currently undergoing updates. Deployment will resume shortly.</p>
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="construction-layer" class="overlay-blur">
+        <div class="text-center">
+            <h1 class="text-4xl font-black mb-2">AVA<span class="text-blue-600">OS</span></h1>
+            <p class="text-gray-500 uppercase tracking-widest text-xs mb-8">System Optimization in Progress</p>
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-600 mx-auto"></div>
+        </div>
     </div>
 
-    <div id="main-site">
-        <nav class="fixed w-full z-50 p-8 flex justify-between items-center mix-blend-difference">
-            <div class="font-ava font-bold text-3xl tracking-tighter">AVA<span class="text-blue-600">OS</span></div>
-            <div class="flex gap-8 items-center">
-                <a href="https://amelabs.net/" target="_blank" class="text-[10px] font-bold tracking-[0.3em] uppercase opacity-50 hover:opacity-100 transition no-underline text-white">AME Labs</a>
-                <a href="#download" class="bg-white text-black px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-105 no-underline">Download</a>
+    <div id="download-modal" class="overlay-blur">
+        <div class="max-w-md w-full mx-4 bento-card p-8 text-center">
+            <div id="modal-badge" class="inline-block px-3 py-1 rounded text-[10px] font-bold mb-4 uppercase">Status</div>
+            <h2 class="text-2xl font-bold mb-4 text-white">Installation Guide</h2>
+            <p class="text-gray-400 text-sm mb-6" id="modal-description-text">
+                This version of <strong>AVA OS</strong> is a <span id="modal-text" class="text-white">...</span> build. 
+                <span id="modal-warning-phrase">It is intended for testing and may cause system instability.</span>
+            </p>
+            <div class="bg-blue-600/10 border border-blue-600/30 p-4 rounded-lg mb-6 text-left">
+                <p class="text-blue-400 text-[11px] font-bold uppercase mb-1">Mandatory Requirement</p>
+                <p class="text-xs text-gray-300 leading-relaxed">You must install <strong>AME Wizard</strong> before running this playbook. Do not attempt to run this as a standalone script.</p>
             </div>
-        </nav>
+            <div class="flex flex-col gap-3">
+                <a href="https://github.com/AVAOSProject/AVA-OS-Playbook/releases" class="btn-primary justify-center text-sm">I Understand & Proceed</a>
+                <button onclick="closeModal()" class="text-gray-500 text-xs font-bold uppercase tracking-widest hover:text-white transition">Go Back</button>
+            </div>
+        </div>
+    </div>
 
-        <section class="h-screen flex flex-col justify-center items-center px-6 relative overflow-hidden">
-            <div class="absolute inset-0 z-0 flex items-center justify-center">
-                <h2 class="text-[25vw] font-black opacity-[0.02] select-none uppercase font-ava">AVA</h2>
+    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <span class="font-black text-2xl tracking-tighter">AVA<span class="text-blue-600">OS</span></span>
+            <span class="text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-gray-400">v0.3</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+            <a href="https://github.com/AVAOSProject" class="hover:text-white transition no-underline">GitHub</a>
+        </div>
+        <button onclick="openModal()" class="btn-primary text-xs !py-2 !px-5">Get Started</button>
+    </nav>
+
+    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative pt-20">
+        <div class="hero-glow"></div>
+        <div class="text-center z-10" data-aos="fade-up">
+            <div class="status-badge inline-block mb-6 uppercase tracking-widest">Active Development</div>
+            <h1 class="text-6xl md:text-8xl font-black text-white leading-tight mb-6">
+                Windows, but <br><span class="text-blue-600">Faster.</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+                AVA OS is an open-source playbook for AME Wizard designed to maximize privacy, reduce latency, and reclaim your hardware's potential.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="openModal()" class="btn-primary">Download Playbook</button>
+                <a href="https://amelabs.net/" target="_blank" class="bg-white/5 border border-white/10 text-white font-bold px-8 py-3 rounded-lg hover:bg-white/10 transition no-underline">AME Wizard</a>
             </div>
-            <div data-aos="fade-up" class="z-10 text-center">
-                <h1 class="font-ava text-8xl md:text-[12rem] font-bold leading-none tracking-tighter mb-4">AVA <span class="text-blue-600">OS</span></h1>
-                <p class="text-gray-500 uppercase tracking-[0.5em] text-xs font-bold mb-12">The Apex Performance Project</p>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bento-card p-10 md:col-span-2" data-aos="fade-up">
+                <div class="text-blue-600 mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-3xl font-bold mb-4 text-white">Peak Performance</h3>
+                <p class="text-gray-400 leading-relaxed">By removing 120+ non-essential services and background telemetry spikes, AVA OS ensures your CPU cycles go where they matter: your applications and games.</p>
+            </div>
+            <div class="bento-card p-10" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-blue-600 mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h3 class="text-3xl font-bold mb-4 text-white">Privacy First</h3>
+                <p class="text-gray-400 leading-relaxed text-sm">Targeted removal of tracking, pre-installed bloatware, and invasive data collection for total user control.</p>
+            </div>
+            <div class="bento-card p-10" data-aos="fade-up">
+                <h4 class="text-5xl font-black text-white mb-2">1.5 GB</h4>
+                <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-6">RAM Freed on Boot</p>
+                <p class="text-gray-400 text-sm leading-relaxed">Significant reduction in background memory footprint compared to stock Windows 11.</p>
+            </div>
+            <div class="bento-card p-10 md:col-span-2" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-3xl font-bold mb-4 text-white">Transparent & GPL-3.0</h3>
+                <p class="text-gray-400 leading-relaxed">No hidden code or black-box binaries. Licensed under <strong>GPL-3.0</strong>, our playbook ensures total transparency—every registry tweak and PowerShell command is human-readable and community-auditable.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6 border-t border-white/5 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto z-10 relative">
+            
+            <div class="grid md:grid-cols-2 gap-16 items-center mb-32" data-aos="fade-up">
+                <div>
+                    <h2 class="text-4xl font-black text-white mb-6 uppercase tracking-tighter italic">Engineered for the 0.1%</h2>
+                    <p class="text-gray-400 leading-relaxed mb-6">AVA OS isn't just another debloater. It is a comprehensive system reconstruction. By leveraging the AME Wizard framework, we modify the core scheduler and interrupt handling to ensure your input latency is decimated.</p>
+                    <ul class="space-y-4 text-sm font-medium text-gray-300">
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span> Advanced CPU Core Parking optimization</li>
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span> GPU Priority High-Performance scheduling</li>
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span> System-wide DPC Latency reduction</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-blue-600/20 to-transparent p-1 rounded-2xl border border-white/5">
+                    <div class="bg-[#0a0a0a] rounded-2xl p-8">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-xs font-bold text-blue-500 tracking-[0.3em] uppercase">System Analytics</span>
+                            <div class="flex gap-1">
+                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-2"><span>Latency Reduction</span><span>-42%</span></div>
+                                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div class="bg-blue-600 h-full w-[42%]"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-2"><span>Process Count</span><span>-124</span></div>
+                                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div class="bg-blue-600 h-full w-[78%]"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-2"><span>Kernel Response</span><span>Instant</span></div>
+                                <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden"><div class="bg-blue-600 h-full w-[95%]"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+                <h2 class="text-4xl md:text-6xl font-black text-white mb-8 uppercase tracking-tighter">
+                    Be part of the <span class="text-blue-600">AVA OS</span> community
+                </h2>
+                <p class="text-gray-400 text-lg md:text-xl mb-12 leading-relaxed max-w-2xl mx-auto">
+                    Join our thriving community of over <span id="download-count" class="text-white font-bold">142,831</span> members. Connect, share, and help us refine the ultimate Windows experience.
+                </p>
+                
                 <div class="flex flex-col md:flex-row gap-6 justify-center">
-                    <a href="#download" class="btn-ava-main">
-                        <span>Get Playbook</span>
-                        <span class="btn-version">v0.3</span>
+                    <a href="https://discord.gg/jCFHBBcE" target="_blank" class="btn-primary !bg-[#5865F2] !text-white hover:!bg-white hover:!text-black transition-all px-10 py-4">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.076.076 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                        Join Discord
+                    </a>
+                    <a href="#" target="_blank" class="bg-white/5 border border-white/10 text-white font-bold px-10 py-4 rounded-lg hover:bg-white/10 transition flex items-center gap-3 no-underline">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.6-4.12-1.31a6.38 6.38 0 0 1-1.3-1.02v5.16c.02 3.44-1.2 7.38-4.55 8.78-3.07 1.28-6.94.73-9.28-1.55-2.5-2.43-2.94-6.76-1.18-9.77 1.63-2.82 5.31-4.12 8.1-2.97.04.1.07.21.11.31-1.67.69-2.97 2.15-3.21 3.94-.28 2.45 1.48 4.74 3.88 5.09 2.52.36 4.82-1.44 5.06-3.93.04-1.2 0-2.41.01-3.62V0l.02.02z"/></svg>
+                        Follow us on TikTok
                     </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="py-24 px-10 max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div data-aos="fade-right">
-                    <span class="tech-tag">Technical Overview</span>
-                    <h2 class="font-ava text-5xl font-bold mt-6 mb-8 uppercase leading-tight">What is the <br><span class="text-blue-600">AVA OS Playbook?</span></h2>
-                    <p class="text-gray-400 text-lg mb-6">The Playbook is a precision-engineered configuration file designed for the <strong>AME Wizard</strong>. Unlike traditional "tweaking scripts" that can break dependencies, AVA OS uses a non-destructive approach to decouple Windows services from your hardware.</p>
-                    <ul class="space-y-4 text-sm font-bold uppercase tracking-widest text-gray-500 list-none p-0">
-                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Native AME .apbx Format</li>
-                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Reversible Registry Modules</li>
-                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-600"></span> Targeted Dependency Mapping</li>
-                    </ul>
-                </div>
-                <div class="grid grid-cols-1 gap-4" data-aos="fade-left">
-                    <div class="hud-border p-8">
-                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">01. Service Stripping</h4>
-                        <p class="text-gray-400 text-sm">Disables over 120+ non-essential Windows services including Telemetry, Print Spooler (Optional), and Xbox Live integration.</p>
-                    </div>
-                    <div class="hud-border p-8">
-                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">02. Kernel Optimizations</h4>
-                        <p class="text-gray-400 text-sm">Fine-tunes CPU scheduling and I/O priority to ensure your active application receives 99% of system attention.</p>
-                    </div>
-                    <div class="hud-border p-8">
-                        <h4 class="text-blue-600 font-bold uppercase text-xs mb-2">03. AppX Removal</h4>
-                        <p class="text-gray-400 text-sm">Purges pre-installed bloatware and background "Universal Windows Platform" apps that consume RAM on standby.</p>
-                    </div>
-                </div>
+    <footer class="py-20 px-8 border-t border-white/5 bg-[#050505] relative z-10">
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+            <div class="col-span-2">
+                <span class="font-black text-3xl tracking-tighter block mb-4">AVA<span class="text-blue-600">OS</span></span>
+                <p class="text-gray-500 max-w-sm text-sm leading-relaxed">
+                    A performance-centric OS modification licensed under the <strong>GNU General Public License v3.0</strong>.
+                </p>
             </div>
-        </section>
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Project</h4>
+                <ul class="space-y-4">
+                    <li><a href="https://github.com/AVAOSProject" class="footer-link">GitHub Repo</a></li>
+                    <li><a href="https://amelabs.net/" class="footer-link">AME Wizard</a></li>
+                   
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Legal</h4>
+                <ul class="space-y-4">
+                    <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                    <li><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="footer-link">GPL-3.0 License</a></li>
+                </ul>
+            </div>
+        </div>
 
-        <section id="features" class="py-24 px-10 max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-12 gap-6">
-                <div data-aos="fade-up" class="md:col-span-8 hud-border p-16 rounded-sm">
-                    <h3 class="font-ava text-4xl font-bold mb-6 uppercase">Reclaiming your <span class="text-blue-600">Hardware</span></h3>
-                    <p class="text-gray-400 text-lg leading-relaxed max-w-2xl">Modern Windows installations prioritize data collection over user experience. The AVA OS Project strips away the noise, returning your PC to its raw potential.</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="100" class="md:col-span-4 bg-blue-600 p-16 flex flex-col justify-between">
-                    <div class="text-5xl font-black">30+</div>
-                    <div class="text-sm font-bold uppercase tracking-widest leading-tight">Processes <br>Removed</div>
-                </div>
+        <div class="max-w-6xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4">
+                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em]">
+                    © 2026 AVA OS PROJECT // NOT AFFILIATED WITH MICROSOFT
+                </p>
             </div>
-        </section>
-
-        <section id="download" class="py-40 bg-white text-black text-center">
-            <div data-aos="zoom-in" class="max-w-4xl mx-auto px-6">
-                <h2 class="font-ava text-6xl md:text-8xl font-bold tracking-tighter mb-8 uppercase">Deploy AVA OS</h2>
-                <p class="text-gray-600 text-xl mb-12 font-medium">Download the playbook for use with AME Wizard.</p>
-                <div class="flex flex-col md:flex-row gap-4 justify-center">
-                    <a href="https://github.com/AVAOSProject/AVA-OS-Playbook/releases/tag/Pre-alpha" class="bg-black text-white px-12 py-5 font-bold uppercase tracking-widest hover:bg-blue-600 transition-all hover:scale-105 no-underline">Download .apbx</a>
-                    <a href="https://amelabs.net/" target="_blank" class="border-2 border-black px-12 py-5 font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all hover:scale-105 no-underline">AME Software</a>
-                </div>
+            <div class="flex gap-6">
+                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">GPL-3.0</span>
+                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">Open Source</span>
             </div>
-        </section>
-
-        <footer class="bg-black pt-24 pb-12 px-10 border-t border-white/5 overflow-hidden">
-            <div class="max-w-7xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-16 mb-20">
-                    <div>
-                        <div class="font-ava text-5xl font-bold mb-8 uppercase">AVA<span class="text-blue-600">OS</span></div>
-                        <p class="text-gray-500 max-w-sm mb-8 text-sm leading-relaxed">A community-driven performance project dedicated to creating the cleanest Windows experience possible.</p>
-                        <div class="flex items-center gap-3">
-                            <span class="status-dot"></span>
-                            <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase">Status: v0.3 Optimal</span>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-8">
-                        <div>
-                            <h5 class="text-[10px] font-bold tracking-[0.3em] uppercase text-blue-600 mb-6">Project</h5>
-                            <ul class="space-y-4 text-sm font-bold uppercase tracking-widest list-none p-0 text-white">
-                                
-                                <li><a href="#download" class="footer-link">Download</a></li>
-                                <li><a href="https://amelabs.net/" target="_blank" class="footer-link">AME Labs</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="text-[10px] font-bold tracking-[0.3em] uppercase text-blue-600 mb-6">Community</h5>
-                            <ul class="space-y-4 text-sm font-bold uppercase tracking-widest list-none p-0 text-white">
-                                <li><a href="https://github.com/AVAOSProject" class="footer-link">GitHub</a></li>
-                                <li><a href="https://discord.gg/jCFHBBcE" class="footer-link">Discord</a></li>
-                               
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5">
-                    <div class="text-[10px] font-bold tracking-[0.5em] text-gray-700 uppercase mb-4 md:mb-0">The AVA OS Project // 2026</div>
-                    <div class="flex gap-12"><span class="text-[10px] font-bold text-gray-700">VERSION_0.3</span><span class="text-[10px] font-bold text-gray-700 uppercase">Deployed Stable</span></div>
-                </div>
-            </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // TOGGLE_CONSTRUCTION: Change 'false' to 'true' to show under construction screen
         const isUnderConstruction = false; 
+        const releaseType = 'pre-alpha'; 
 
-        const constructionLayer = document.getElementById('construction-layer');
-        const mainSite = document.getElementById('main-site');
+        const construction = document.getElementById('construction-layer');
+        const modal = document.getElementById('download-modal');
+        const modalBadge = document.getElementById('modal-badge');
+        const modalText = document.getElementById('modal-text');
+        const modalWarningPhrase = document.getElementById('modal-warning-phrase');
+        const downloadCountElement = document.getElementById('download-count');
 
-        if (isUnderConstruction) {
-            constructionLayer.style.display = 'flex';
-            mainSite.style.display = 'none';
-        } else {
-            constructionLayer.style.display = 'none';
-            mainSite.style.display = 'block';
-            AOS.init({ duration: 1000, once: false, offset: 50 });
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    if (mouse.x < this.x && this.x < canvas.width - 10) this.x += 1;
+                    if (mouse.x > this.x && this.x > 10) this.x -= 1;
+                    if (mouse.y < this.y && this.y < canvas.height - 10) this.y += 1;
+                    if (mouse.y > this.y && this.y > 10) this.y -= 1;
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
 
-        const footer = document.querySelector('footer');
-        footer.addEventListener('mousemove', (e) => {
-            const rect = footer.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            footer.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(0, 98, 255, 0.08) 0%, transparent 60%)`;
-        });
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            let particleCount = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        function initUI() {
+            AOS.init({ duration: 800, once: true });
+            
+            if(isUnderConstruction) {
+                construction.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                construction.style.display = 'none';
+            }
+
+            const types = {
+                'pre-alpha': { label: 'Pre-Alpha', color: 'rgba(239, 68, 68, 0.2)', text: '#ef4444', warning: 'It is intended for testing and may cause system instability.' },
+                'alpha': { label: 'Alpha Build', color: 'rgba(249, 115, 22, 0.2)', text: '#f97316', warning: 'It is an early build for testers and power users.' },
+                'beta': { label: 'Beta Phase', color: 'rgba(59, 130, 246, 0.2)', text: '#3b82f6', warning: 'It is feature-complete but may still contain minor bugs.' },
+                'stable': { label: 'Stable Release', color: 'rgba(34, 197, 94, 0.2)', text: '#22c55e', warning: 'It has been verified for daily use and maximum stability.' }
+            };
+            
+            const config = types[releaseType] || types['pre-alpha'];
+            modalBadge.innerText = config.label;
+            modalBadge.style.backgroundColor = config.color;
+            modalBadge.style.color = config.text;
+            modalBadge.style.borderColor = config.text + '44';
+            modalText.innerText = config.label;
+            modalText.style.color = config.text;
+            modalWarningPhrase.innerText = config.warning;
+
+            let baseCount = 142831;
+            downloadCountElement.innerText = baseCount.toLocaleString();
+
+            initParticles();
+            animate();
+        }
+
+        function openModal() {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('resize', initParticles);
+        window.onload = initUI;
     </script>
 </body>
 </html>
