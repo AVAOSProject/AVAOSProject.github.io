@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AVA OS | Asset Export</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
         
@@ -29,13 +29,14 @@
             z-index: -1;
         }
 
-        /* The specific area we will screenshot */
+        /* The specific area to capture */
         #logo-export-zone {
-            padding: 100px;
-            background: transparent;
+            padding: 80px 120px;
+            background: #080808; /* Solid bg helps the screenshot tool */
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 20px;
         }
 
         .logo-text {
@@ -45,7 +46,7 @@
             letter-spacing: -0.05em;
             color: #ffffff;
             user-select: none;
-            filter: drop-shadow(0 0 40px rgba(0, 98, 255, 0.3));
+            filter: drop-shadow(0 0 30px rgba(0, 98, 255, 0.4));
         }
 
         .dot-blue {
@@ -56,6 +57,9 @@
             position: fixed;
             bottom: 40px;
             z-index: 100;
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
 
         .btn-screenshot {
@@ -63,20 +67,35 @@
             color: #000;
             font-weight: 800;
             padding: 14px 32px;
-            border-radius: 50px;
+            border-radius: 8px;
             text-transform: uppercase;
             font-size: 12px;
             letter-spacing: 0.1em;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             border: none;
         }
 
         .btn-screenshot:hover {
-            transform: scale(1.05);
             background: #0062ff;
             color: white;
-            box-shadow: 0 10px 20px rgba(0, 98, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #status-msg {
+            color: #444;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Flash effect when taking photo */
+        .flash {
+            animation: flash-anim 0.3s ease-out;
+        }
+        @keyframes flash-anim {
+            0% { background: #fff; }
+            100% { background: #080808; }
         }
     </style>
 </head>
@@ -91,11 +110,12 @@
     </div>
 
     <div class="controls">
-        <button class="btn-screenshot" onclick="takeScreenshot()">Download PNG</button>
+        <button class="btn-screenshot" onclick="takeScreenshot()">Capture Logo</button>
+        <div id="status-msg">Ready for export</div>
     </div>
 
     <script>
-        // Particle Background Logic
+        // Particle Background
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -105,8 +125,8 @@
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
             }
             update() {
                 this.x += this.speedX;
@@ -117,7 +137,7 @@
                 if (this.y < 0) this.y = canvas.height;
             }
             draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -128,7 +148,7 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             particles = [];
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
+            for (let i = 0; i < 80; i++) particles.push(new Particle());
         }
 
         function animate() {
@@ -140,17 +160,29 @@
         // Screenshot Logic
         function takeScreenshot() {
             const element = document.getElementById('logo-export-zone');
+            const status = document.getElementById('status-msg');
             
-            // Temporary hide the background for a cleaner "cutout" if desired
-            // Or keep it as is. Here we capture it with the dark theme.
+            status.innerText = "Processing...";
+            document.body.classList.add('flash');
+
             html2canvas(element, {
                 backgroundColor: "#080808",
-                scale: 2 // Double resolution for crispness
+                scale: 3, // Very high quality
+                logging: false,
+                useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'AVAOS-Logo.png';
-                link.href = canvas.toDataURL();
+                link.download = 'AVA-OS-Logo.png';
+                link.href = canvas.toDataURL("image/png");
                 link.click();
+                
+                setTimeout(() => {
+                    document.body.classList.remove('flash');
+                    status.innerText = "Downloaded";
+                }, 500);
+            }).catch(err => {
+                console.error(err);
+                status.innerText = "Error - Check Console";
             });
         }
 
