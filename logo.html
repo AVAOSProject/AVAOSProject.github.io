@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA OS | Logo Creator</title>
+    <title>AVA OS | Square Logo Export</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
@@ -19,7 +19,6 @@
             flex-direction: column;
         }
 
-        /* Particle Canvas for the live view */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -29,27 +28,26 @@
             z-index: -1;
         }
 
-        /* Perfectly centered container */
-        .preview-wrapper {
+        /* Square Preview Box */
+        .preview-square {
             position: relative;
+            width: 500px;
+            height: 500px;
+            background: #080808;
+            border: 2px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 1000px;
-            height: 500px;
-            background: rgba(255,255,255,0.02);
-            border: 1px dashed rgba(255,255,255,0.1);
-            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
         .logo-text {
             font-family: 'Inter', sans-serif;
             font-weight: 900;
-            font-size: 10rem;
+            font-size: 6rem; /* Scaled down for preview */
             letter-spacing: -0.05em;
             color: #ffffff;
-            filter: drop-shadow(0 0 30px rgba(0, 98, 255, 0.4));
-            user-select: none;
+            filter: drop-shadow(0 0 20px rgba(0, 98, 255, 0.3));
         }
 
         .dot-blue { color: #0062ff; }
@@ -61,19 +59,18 @@
             color: #000;
             font-weight: 800;
             padding: 16px 40px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .btn-capture:hover {
             background: #0062ff;
             color: white;
-            transform: translateY(-3px);
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -81,103 +78,97 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <div class="preview-wrapper">
-        <div id="export-target" class="logo-text">
+    <div class="preview-square">
+        <div class="logo-text">
             AVA<span class="dot-blue">OS</span>
         </div>
     </div>
 
-    <button class="btn-capture" onclick="downloadLogo()">Download High-Res PNG</button>
+    <button class="btn-capture" onclick="downloadSquareLogo()">Download 1080x1080 PNG</button>
 
     <script>
-        // --- 1. Background Animation ---
+        // --- Background Particles ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.4 - 0.2;
-                this.speedY = Math.random() * 0.4 - 0.2;
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
         function init() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < 80; i++) particles.push(new Particle());
+            particles = Array.from({length: 60}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3
+            }));
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+            });
             requestAnimationFrame(animate);
         }
 
-        // --- 2. Reliable Centered Download ---
-        function downloadLogo() {
-            // Create a temporary canvas for the final export
-            const exportCanvas = document.createElement('canvas');
-            const eCtx = exportCanvas.getContext('2d');
-            
-            // Set high resolution (4K-ish aspect)
-            exportCanvas.width = 1920;
-            exportCanvas.height = 1080;
+        // --- Square Logo Export ---
+        function downloadSquareLogo() {
+            const exp = document.createElement('canvas');
+            const eCtx = exp.getContext('2d');
+            exp.width = 1080;
+            exp.height = 1080;
 
-            // Fill background
+            // 1. Draw Background
             eCtx.fillStyle = "#080808";
-            eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            eCtx.fillRect(0, 0, 1080, 1080);
 
-            // Draw some "static" particles for the background effect
-            eCtx.fillStyle = "rgba(255,255,255,0.15)";
-            for(let i=0; i<100; i++) {
+            // 2. Static Particle Aesthetic
+            eCtx.fillStyle = "rgba(255, 255, 255, 0.12)";
+            for(let i=0; i<80; i++) {
                 eCtx.beginPath();
-                eCtx.arc(Math.random()*1920, Math.random()*1080, Math.random()*3, 0, Math.PI*2);
+                eCtx.arc(Math.random()*1080, Math.random()*1080, Math.random()*3, 0, Math.PI*2);
                 eCtx.fill();
             }
 
-            // Draw the Logo Text
-            eCtx.textAlign = "center";
+            // 3. Logo Setup
+            const fontSize = 180; // Smaller font size
+            eCtx.font = `900 ${fontSize}px Inter, sans-serif`;
             eCtx.textBaseline = "middle";
-            eCtx.font = "900 300px Inter, sans-serif";
             
-            // Shadow / Glow
-            eCtx.shadowColor = "rgba(0, 98, 255, 0.6)";
-            eCtx.shadowBlur = 50;
+            // Measure widths to prevent overlap
+            const widthAVA = eCtx.measureText("AVA").width;
+            const widthOS = eCtx.measureText("OS").width;
+            const kerning = -8; // Slight negative kerning for that tight look
+            const totalWidth = widthAVA + widthOS + kerning;
 
-            // Draw "AVA" in White
-            const fullText = "AVAOS";
-            const xPos = exportCanvas.width / 2;
-            const yPos = exportCanvas.height / 2;
-            
+            // Calculate Start Position (Center Alignment)
+            const startX = (1080 - totalWidth) / 2;
+            const centerY = 1080 / 2;
+
+            // 4. Draw Shadow/Glow
+            eCtx.shadowColor = "rgba(0, 98, 255, 0.5)";
+            eCtx.shadowBlur = 40;
+
+            // 5. Draw "AVA"
             eCtx.fillStyle = "#ffffff";
-            eCtx.fillText("AVA", xPos - 125, yPos); // Offset slightly for the "OS"
+            eCtx.fillText("AVA", startX, centerY);
 
-            // Draw "OS" in Blue
+            // 6. Draw "OS"
+            eCtx.shadowBlur = 20; // Lower glow for color clarity
             eCtx.fillStyle = "#0062ff";
-            eCtx.fillText("OS", xPos + 225, yPos);
+            eCtx.fillText("OS", startX + widthAVA + kerning, centerY);
 
-            // Trigger download
+            // 7. Download
             const link = document.createElement('a');
-            link.download = 'AVA-OS-Branding.png';
-            link.href = exportCanvas.toDataURL("image/png");
+            link.download = 'AVA-OS-Square.png';
+            link.href = exp.toDataURL("image/png");
             link.click();
         }
 
