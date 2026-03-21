@@ -211,6 +211,28 @@
                 <h3 class="text-3xl font-bold mb-4 text-white">Transparent & GPL-3.0</h3>
                 <p class="text-gray-400 leading-relaxed">No hidden code or black-box binaries. Licensed under <strong>GPL-3.0</strong>, our playbook ensures total transparency—every registry tweak and PowerShell command is human-readable and community-auditable.</p>
             </div>
+
+            <div class="bento-card p-10" data-aos="fade-up">
+                <div class="text-blue-600 mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-white">Hardened Security</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">We don't just delete; we protect. AVA OS includes optional security hardening to block network-level vulnerabilities and untrusted executables.</p>
+            </div>
+            <div class="bento-card p-10" data-aos="fade-up">
+                <div class="text-blue-600 mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-white">Global Support</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Our Discord isn't just for chat. Get real-time troubleshooting from power users and the developers themselves, 24/7.</p>
+            </div>
+            <div class="bento-card p-10" data-aos="fade-up">
+                <div class="text-blue-600 mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a2 2 0 00-1.96 1.414l-.477 2.387a2 2 0 00.547 1.022l1.428 1.428a2 2 0 002.828 0l1.428-1.428a2 2 0 00.547-1.022l-.477-2.387z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-white">Wide Compatibility</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Whether you are on a high-end RTX 4090 rig or a low-spec laptop, AVA OS scales its optimizations to match your hardware's specific architecture.</p>
+            </div>
         </div>
     </section>
 
@@ -219,7 +241,7 @@
             
             <div class="grid md:grid-cols-2 gap-16 items-center mb-32" data-aos="fade-up">
                 <div>
-                    <h2 class="text-4xl font-black text-white mb-6 uppercase tracking-tighter italic">Engineered for the 0.1%</h2>
+                    <h2 class="text-4xl font-black text-white mb-6 uppercase tracking-tighter">Engineered for the 0.1%</h2>
                     <p class="text-gray-400 leading-relaxed mb-6">AVA OS isn't just another debloater. It is a comprehensive system reconstruction. By leveraging the AME Wizard framework, we modify the core scheduler and interrupt handling to ensure your input latency is decimated.</p>
                     <ul class="space-y-4 text-sm font-medium text-gray-300">
                         <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span> Advanced CPU Core Parking optimization</li>
@@ -257,7 +279,7 @@
 
             <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
                 <h2 class="text-4xl md:text-6xl font-black text-white mb-8 uppercase tracking-tighter">
-                    Be part of the <span class="text-blue-600">AVA OS</span> community
+                    Be part of the AVA<span class="text-blue-600">OS</span> community
                 </h2>
                 <p class="text-gray-400 text-lg md:text-xl mb-6 leading-relaxed max-w-2xl mx-auto">
                     Join our thriving community of over <span id="download-count" class="text-white font-bold">...</span> members. Connect, share, and help us refine the ultimate Windows experience.
@@ -321,7 +343,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Toggle, Switch
+        // toggle, switch
         const isUnderConstruction = false; 
         const releaseType = 'pre-alpha'; 
 
@@ -387,7 +409,6 @@
             requestAnimationFrame(animate);
         }
 
-        // DYNAMIC DISCORD MEMBER FETCH
         async function fetchDiscordStats() {
             const inviteCode = 'jCFHBBcE'; 
             const fallbackTotal = 142831;
