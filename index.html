@@ -98,6 +98,24 @@
             border: 1px solid rgba(0, 255, 136, 0.2);
         }
 
+        /* Pulsing Online Dot */
+        .online-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #00ff88;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
         .footer-link {
             color: #9ca3af;
             transition: color 0.2s ease;
@@ -241,9 +259,14 @@
                 <h2 class="text-4xl md:text-6xl font-black text-white mb-8 uppercase tracking-tighter">
                     Be part of the <span class="text-blue-600">AVA OS</span> community
                 </h2>
-                <p class="text-gray-400 text-lg md:text-xl mb-12 leading-relaxed max-w-2xl mx-auto">
-                    Join our thriving community of over <span id="download-count" class="text-white font-bold">142,831</span> members. Connect, share, and help us refine the ultimate Windows experience.
+                <p class="text-gray-400 text-lg md:text-xl mb-6 leading-relaxed max-w-2xl mx-auto">
+                    Join our thriving community of over <span id="download-count" class="text-white font-bold">...</span> members. Connect, share, and help us refine the ultimate Windows experience.
                 </p>
+                <div id="online-status-container" class="mb-12 opacity-0 transition-opacity duration-500">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                        <span class="online-dot"></span> <span id="online-count" class="text-white">0</span> Online Now
+                    </span>
+                </div>
                 
                 <div class="flex flex-col md:flex-row gap-6 justify-center">
                     <a href="https://discord.gg/jCFHBBcE" target="_blank" class="btn-primary !bg-[#5865F2] !text-white hover:!bg-white hover:!text-black transition-all px-10 py-4">
@@ -272,7 +295,6 @@
                 <ul class="space-y-4">
                     <li><a href="https://github.com/AVAOSProject" class="footer-link">GitHub Repo</a></li>
                     <li><a href="https://amelabs.net/" class="footer-link">AME Wizard</a></li>
-                   
                 </ul>
             </div>
             <div>
@@ -299,6 +321,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Toggle, Switch
         const isUnderConstruction = false; 
         const releaseType = 'pre-alpha'; 
 
@@ -308,6 +331,8 @@
         const modalText = document.getElementById('modal-text');
         const modalWarningPhrase = document.getElementById('modal-warning-phrase');
         const downloadCountElement = document.getElementById('download-count');
+        const onlineCountElement = document.getElementById('online-count');
+        const onlineStatusContainer = document.getElementById('online-status-container');
 
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
@@ -362,6 +387,28 @@
             requestAnimationFrame(animate);
         }
 
+        // DYNAMIC DISCORD MEMBER FETCH
+        async function fetchDiscordStats() {
+            const inviteCode = 'jCFHBBcE'; 
+            const fallbackTotal = 142831;
+            
+            try {
+                const response = await fetch(`https://discord.com/api/v9/invites/${inviteCode}?with_counts=true`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.approximate_member_count) {
+                        downloadCountElement.innerText = data.approximate_member_count.toLocaleString();
+                        onlineCountElement.innerText = data.approximate_presence_count.toLocaleString();
+                        onlineStatusContainer.classList.remove('opacity-0');
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log("Discord API fallback triggered.");
+            }
+            downloadCountElement.innerText = fallbackTotal.toLocaleString();
+        }
+
         function initUI() {
             AOS.init({ duration: 800, once: true });
             
@@ -388,9 +435,7 @@
             modalText.style.color = config.text;
             modalWarningPhrase.innerText = config.warning;
 
-            let baseCount = 142831;
-            downloadCountElement.innerText = baseCount.toLocaleString();
-
+            fetchDiscordStats();
             initParticles();
             animate();
         }
