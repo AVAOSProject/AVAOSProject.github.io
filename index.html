@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVAOS | Select Your Version</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        :root {
+            --atlas-blue: #0062ff;
+            --atlas-bg: #080808;
+            --atlas-card: rgba(17, 17, 17, 0.7);
+            --atlas-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--atlas-bg);
+            color: #eeeeee;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(0, 98, 255, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Block Overlay */
+        #mobile-block {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 8, 8, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: none; /* Hidden by default, shown via JS */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .bento-card {
+            background: var(--atlas-card);
+            border: 1px solid var(--atlas-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .bento-card:hover {
+            border-color: rgba(0, 98, 255, 0.4);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--atlas-border);
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .bento-card:hover .btn-outline {
+            background: var(--atlas-blue);
+            border-color: var(--atlas-blue);
+        }
+
+        .version-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(0, 98, 255, 0.3));
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="mobile-block">
+        <div class="mb-6 text-blue-600">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <h2 class="text-2xl font-black text-white mb-2 uppercase tracking-tighter">Desktop Only</h2>
+        <p class="text-gray-400 text-sm max-w-xs leading-relaxed">AVAOS is designed for system-level PC optimization. To view or download the playbooks, please open this site on a Windows computer.</p>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <span class="font-black text-2xl tracking-tighter">AVA<span class="text-blue-600">OS</span></span>
+        </div>
+        </nav>
+
+    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative">
+        <div class="hero-glow"></div>
+        
+        <div class="text-center z-10 mb-16" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4 uppercase tracking-tighter">
+                Choose your <span class="text-blue-600">Foundation</span>
+            </h1>
+            <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
+                Select your Windows version to download the specifically optimized AVAOS Playbook.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 w-full max-w-4xl z-10">
+            <a href="10.html" class="bento-card p-12 group" data-aos="fade-right">
+                <div class="version-icon">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
+                        <path d="M0 3.449L9.75 2.1L9.751 11.332H0V3.449ZM0 12.648H9.751V21.899L0 20.551V12.648ZM10.875 1.944L24 0V11.332H10.875V1.944ZM10.875 12.648H24V24L10.875 22.056V12.648Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-black text-white mb-1">Windows 10</h3>
+                <p id="w10-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-4"></p>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Stable, reliable, and stripped of all legacy bloatware for maximum FPS.</p>
+                <div class="btn-outline">Select W10</div>
+            </a>
+
+            <a href="11.html" class="bento-card p-12 group" data-aos="fade-left">
+                <div class="version-icon">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
+                        <path d="M0 0H11.332V11.332H0V0ZM12.668 0H24V11.332H12.668V0ZM0 12.668H11.332V24H0V12.668ZM12.668 12.668H24V24H12.668V12.668Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3 class="text-3xl font-black text-white mb-1">Windows 11</h3>
+                <p id="w11-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-4"></p>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed">Modern kernel optimizations with 24H2 support and reduced latency.</p>
+                <div class="btn-outline">Select W11</div>
+            </a>
+        </div>
+        
+        <p class="mt-16 text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em] z-10">
+            AVAOS PROJECT // PERFORMANCE REDEFINED
+        </p>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // --- AVAOS VERSION SWITCHES ---
+        const versionConfig = {
+            w10: {
+                version: "v0.1",
+                availability: "Pre-Alpha",
+                color: "#ef4444"
+            },
+            w11: {
+                version: "v0.5",
+                availability: "Beta",
+                color: "#3b82f6"
+            }
+        };
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    if (mouse.x < this.x && this.x < canvas.width - 10) this.x += 1;
+                    if (mouse.x > this.x && this.x > 10) this.x -= 1;
+                    if (mouse.y < this.y && this.y < canvas.height - 10) this.y += 1;
+                    if (mouse.y > this.y && this.y > 10) this.y -= 1;
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            let particleCount = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        function applyVersionConfig() {
+            const w10Label = document.getElementById('w10-status');
+            const w11Label = document.getElementById('w11-status');
+            if(w10Label) {
+                w10Label.innerText = `${versionConfig.w10.availability} // ${versionConfig.w10.version}`;
+                w10Label.style.color = versionConfig.w10.color;
+            }
+            if(w11Label) {
+                w11Label.innerText = `${versionConfig.w11.availability} // ${versionConfig.w11.version}`;
+                w11Label.style.color = versionConfig.w11.color;
+            }
+        }
+
+        function checkMobile() {
+            // Checks if the user-agent is a mobile device or if the screen is very small
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth < 768);
+            if (isMobile) {
+                document.getElementById('mobile-block').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        window.onload = () => {
+            checkMobile();
+            AOS.init({ duration: 800, once: true });
+            applyVersionConfig();
+            initParticles();
+            animate();
+        };
+
+        window.addEventListener('resize', () => {
+            checkMobile();
+            initParticles();
+        });
+    </script>
+</body>
+</html>
