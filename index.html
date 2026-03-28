@@ -47,14 +47,13 @@
             pointer-events: none;
         }
 
-        /* Mobile Block Overlay */
-        #mobile-block {
+        #mobile-block, #warning-modal {
             position: fixed;
             inset: 0;
-            background: rgba(8, 8, 8, 0.98);
+            background: rgba(8, 8, 8, 0.95);
             backdrop-filter: blur(20px);
             z-index: 9999;
-            display: none; /* Hidden by default, shown via JS */
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -104,6 +103,25 @@
             margin-bottom: 1.5rem;
             filter: drop-shadow(0 0 15px rgba(0, 98, 255, 0.3));
         }
+
+        .warning-box {
+            background: var(--atlas-card);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 3rem;
+            border-radius: 16px;
+            max-width: 500px;
+        }
+
+        /* Footer Styles */
+        .footer-link {
+            color: #9ca3af;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .footer-link:hover {
+            color: white;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -113,7 +131,25 @@
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
         </div>
         <h2 class="text-2xl font-black text-white mb-2 uppercase tracking-tighter">Desktop Only</h2>
-        <p class="text-gray-400 text-sm max-w-xs leading-relaxed">AVAOS is designed for system-level PC optimization. To view or download the playbooks, please open this site on a Windows computer.</p>
+        <p class="text-gray-400 text-sm max-w-xs leading-relaxed">AVAOS is designed for system-level PC optimization. Please open this site on a Windows computer.</p>
+    </div>
+
+    <div id="warning-modal">
+        <div class="warning-box">
+            <div class="text-red-500 mb-6 flex justify-center">
+                <svg width="60" height="60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-black text-white mb-4 uppercase tracking-tighter">End of Support Warning</h2>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                Windows 10 is approaching its <span class="text-red-500 font-bold">End of Life</span>. Microsoft will no longer provide security updates or technical support for this version after October 2025. 
+                <br><br>
+                For the most secure experience, we recommend using <span class="text-blue-500 font-bold">AVAOS for Windows 11</span>.
+            </p>
+            <div class="flex flex-col gap-3">
+                <a href="10.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition text-xs uppercase tracking-widest no-underline">Proceed Anyway</a>
+                <button onclick="closeWarning()" class="btn-outline">Cancel and go back</button>
+            </div>
+        </div>
     </div>
 
     <canvas id="bg-canvas"></canvas>
@@ -122,14 +158,14 @@
         <div class="flex items-center gap-2">
             <span class="font-black text-2xl tracking-tighter">AVA<span class="text-blue-600">OS</span></span>
         </div>
-        </nav>
+    </nav>
 
     <section class="min-h-screen flex flex-col justify-center items-center px-6 relative">
         <div class="hero-glow"></div>
         
         <div class="text-center z-10 mb-16" data-aos="fade-up">
             <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4 uppercase tracking-tighter">
-                Choose your <span class="text-blue-600">Foundation</span>
+                Choose your <span class="text-blue-600">Version</span>
             </h1>
             <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
                 Select your Windows version to download the specifically optimized AVAOS Playbook.
@@ -137,7 +173,7 @@
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 w-full max-w-4xl z-10">
-            <a href="10.html" class="bento-card p-12 group" data-aos="fade-right">
+            <a href="javascript:void(0)" onclick="openWarning()" class="bento-card p-12 group" data-aos="fade-right">
                 <div class="version-icon">
                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
                         <path d="M0 3.449L9.75 2.1L9.751 11.332H0V3.449ZM0 12.648H9.751V21.899L0 20.551V12.648ZM10.875 1.944L24 0V11.332H10.875V1.944ZM10.875 12.648H24V24L10.875 22.056V12.648Z" fill="currentColor"/>
@@ -161,26 +197,48 @@
                 <div class="btn-outline">Select W11</div>
             </a>
         </div>
-        
-        <p class="mt-16 text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em] z-10">
-            AVAOS PROJECT // PERFORMANCE REDEFINED
-        </p>
     </section>
+
+    <footer class="py-20 px-8 border-t border-white/5 bg-[#050505] relative z-10 mt-20">
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 mb-16 text-left">
+            <div class="col-span-2">
+                <span class="font-black text-3xl tracking-tighter block mb-4">AVA<span class="text-blue-600">OS</span></span>
+                <p class="text-gray-500 max-w-sm text-sm leading-relaxed">
+                    A performance-centric OS modification licensed under the <strong>GNU General Public License v3.0</strong>.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Project</h4>
+                <ul class="space-y-4">
+                    <li><a href="https://github.com/AVAOSProject" class="footer-link">GitHub Repo</a></li>
+                    <li><a href="https://amelabs.net/" class="footer-link">AME Wizard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Legal</h4>
+                <ul class="space-y-4">
+                    <li><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="footer-link">GPL-3.0 License</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4">
+                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em]">
+                    © 2026 AVAOS PROJECT // NOT AFFILIATED WITH MICROSOFT
+                </p>
+            </div>
+            <div class="flex gap-6">
+                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">GPL-3.0</span>
+                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">Open Source</span>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // --- AVAOS VERSION SWITCHES ---
         const versionConfig = {
-            w10: {
-                version: "v0.1",
-                availability: "Pre-Alpha",
-                color: "#ef4444"
-            },
-            w11: {
-                version: "v0.5",
-                availability: "Beta",
-                color: "#3b82f6"
-            }
+            w10: { version: "v0.1", availability: "Pre-Alpha", color: "#ef4444" },
+            w11: { version: "v0.5", availability: "Beta", color: "#3b82f6" }
         };
 
         const canvas = document.getElementById('bg-canvas');
@@ -189,6 +247,16 @@
         let mouse = { x: null, y: null, radius: 150 };
         
         window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+
+        function openWarning() {
+            document.getElementById('warning-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWarning() {
+            document.getElementById('warning-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
 
         class Particle {
             constructor() {
@@ -249,7 +317,6 @@
         }
 
         function checkMobile() {
-            // Checks if the user-agent is a mobile device or if the screen is very small
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth < 768);
             if (isMobile) {
                 document.getElementById('mobile-block').style.display = 'flex';
