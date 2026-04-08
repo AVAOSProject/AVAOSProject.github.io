@@ -8,20 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
         :root {
-            --atlas-blue: #0062ff;
-            --atlas-bg: #080808;
-            --atlas-card: rgba(17, 17, 17, 0.7);
-            --atlas-border: rgba(255, 255, 255, 0.08);
+            --blue: #0062ff;
+            --bg: #080808;
+            --card: rgba(17, 17, 17, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--atlas-bg);
+            background-color: var(--bg);
             color: #eeeeee;
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.02em;
-            margin: 0;
             overflow-x: hidden;
         }
 
@@ -50,7 +52,7 @@
         #mobile-block, #warning-modal {
             position: fixed;
             inset: 0;
-            background: rgba(8, 8, 8, 0.95);
+            background: rgba(8, 8, 8, 0.98);
             backdrop-filter: blur(20px);
             z-index: 9999;
             display: none;
@@ -62,10 +64,10 @@
         }
 
         .bento-card {
-            background: var(--atlas-card);
-            border: 1px solid var(--atlas-border);
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(12px);
             cursor: pointer;
             text-decoration: none;
@@ -75,52 +77,192 @@
             justify-content: center;
             text-align: center;
         }
+        
         .bento-card:hover {
             border-color: rgba(0, 98, 255, 0.4);
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.02);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 20px 40px -15px rgba(0, 98, 255, 0.15);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--atlas-border);
+            border: 1px solid var(--border);
             color: #fff;
             font-weight: 600;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             transition: all 0.2s;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
+        
         .bento-card:hover .btn-outline {
-            background: var(--atlas-blue);
-            border-color: var(--atlas-blue);
+            background: var(--blue);
+            border-color: var(--blue);
         }
 
         .version-icon {
             font-size: 3rem;
             margin-bottom: 1.5rem;
-            filter: drop-shadow(0 0 15px rgba(0, 98, 255, 0.3));
+            filter: drop-shadow(0 0 20px rgba(0, 98, 255, 0.2));
+            transition: all 0.3s;
+        }
+        
+        .bento-card:hover .version-icon {
+            filter: drop-shadow(0 0 30px rgba(0, 98, 255, 0.4));
+            transform: scale(1.05);
         }
 
         .warning-box {
-            background: var(--atlas-card);
+            background: var(--card);
             border: 1px solid rgba(239, 68, 68, 0.2);
-            padding: 3rem;
-            border-radius: 16px;
-            max-width: 500px;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 480px;
+            backdrop-filter: blur(20px);
         }
 
-        /* Footer Styles */
-        .footer-link {
-            color: #9ca3af;
-            transition: color 0.2s ease;
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(8, 8, 8, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            letter-spacing: -0.04em; 
+            color: #fff;
+        }
+        
+        .logo-text span { color: var(--blue); }
+
+        .nav-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #666;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 80px 40px 40px;
+            border-top: 1px solid var(--border);
+            background: #050505;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+        }
+
+        .footer-brand p {
+            color: #666;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-top: 16px;
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: #888;
             text-decoration: none;
             font-size: 0.875rem;
+            transition: all 0.2s;
+            display: inline-block;
         }
-        .footer-link:hover {
-            color: white;
+
+        .footer-links a:hover {
+            color: var(--blue);
+            transform: translateX(4px);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 60px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copy {
+            font-size: 11px;
+            color: #444;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 12px;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #555;
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .badge:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 16px 20px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
         }
     </style>
 </head>
@@ -154,20 +296,21 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
-        <div class="flex items-center gap-2">
-            <span class="font-black text-2xl tracking-tighter">AVA<span class="text-blue-600">OS</span></span>
-        </div>
-    </nav>
+    <header class="header">
+        <a href="index.html" class="logo-link">
+            <span class="logo-text">AVA<span>OS</span></span>
+        </a>
+        <span class="nav-badge">Select Version</span>
+    </header>
 
-    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative">
+    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative pt-24">
         <div class="hero-glow"></div>
         
         <div class="text-center z-10 mb-16" data-aos="fade-up">
-            <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-4 uppercase tracking-tighter">
+            <h1 class="text-5xl md:text-7xl font-black text-white leading-tight mb-6 uppercase tracking-tighter">
                 Choose your <span class="text-blue-600">Version</span>
             </h1>
-            <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
+            <p class="text-gray-400 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
                 Select your Windows version to download the specifically optimized AVAOS Playbook.
             </p>
         </div>
@@ -175,24 +318,24 @@
         <div class="grid md:grid-cols-2 gap-8 w-full max-w-4xl z-10">
             <a href="javascript:void(0)" onclick="openWarning()" class="bento-card p-12 group" data-aos="fade-right">
                 <div class="version-icon">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
                         <path d="M0 3.449L9.75 2.1L9.751 11.332H0V3.449ZM0 12.648H9.751V21.899L0 20.551V12.648ZM10.875 1.944L24 0V11.332H10.875V1.944ZM10.875 12.648H24V24L10.875 22.056V12.648Z" fill="currentColor"/>
                     </svg>
                 </div>
-                <h3 class="text-3xl font-black text-white mb-1">Windows 10</h3>
-                <p id="w10-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-4"></p>
+                <h3 class="text-3xl font-black text-white mb-2">Windows 10</h3>
+                <p id="w10-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-6"></p>
                 <p class="text-gray-500 text-sm mb-8 leading-relaxed">Stable, reliable, and stripped of all legacy bloatware for maximum FPS.</p>
                 <div class="btn-outline">Select W10</div>
             </a>
 
             <a href="11.html" class="bento-card p-12 group" data-aos="fade-left">
                 <div class="version-icon">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-blue-500 transition-colors">
                         <path d="M0 0H11.332V11.332H0V0ZM12.668 0H24V11.332H12.668V0ZM0 12.668H11.332V24H0V12.668ZM12.668 12.668H24V24H12.668V12.668Z" fill="currentColor"/>
                     </svg>
                 </div>
-                <h3 class="text-3xl font-black text-white mb-1">Windows 11</h3>
-                <p id="w11-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-4"></p>
+                <h3 class="text-3xl font-black text-white mb-2">Windows 11</h3>
+                <p id="w11-status" class="text-[10px] uppercase tracking-[0.2em] font-bold mb-6"></p>
                 <p class="text-gray-500 text-sm mb-8 leading-relaxed">Modern kernel optimizations with 24H2 support and reduced latency.</p>
                 <div class="btn-outline">Select W11</div>
             </a>
@@ -234,37 +377,39 @@
         </div>
     </section>
 
-    <footer class="py-20 px-8 border-t border-white/5 bg-[#050505] relative z-10">
-        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 mb-16 text-left">
-            <div class="col-span-2">
-                <span class="font-black text-3xl tracking-tighter block mb-4">AVA<span class="text-blue-600">OS</span></span>
-                <p class="text-gray-500 max-w-sm text-sm leading-relaxed">
-                    A performance-centric OS modification licensed under the <strong>GNU General Public License v3.0</strong>.
-                </p>
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <span class="logo-text">AVA<span>OS</span></span>
+                <p>A performance-centric OS modification licensed under the GNU General Public License v3.0.</p>
             </div>
-            <div>
-                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Project</h4>
-                <ul class="space-y-4">
-                    <li><a href="https://github.com/AVAOSProject" class="footer-link">GitHub Repo</a></li>
-                    <li><a href="https://amelabs.net/" class="footer-link">AME Wizard</a></li>
+            <div class="footer-col">
+                <h4>Project</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/AVAOSProject">GitHub</a></li>
+                    <li><a href="https://amelabs.net/">AME Wizard</a></li>
+                    <li><a href="index.html">Downloads</a></li>
                 </ul>
             </div>
-            <div>
-                <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-6">Legal</h4>
-                <ul class="space-y-4">
-                    <li><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="footer-link">GPL-3.0 License</a></li>
+            <div class="footer-col">
+                <h4>Tools</h4>
+                <ul class="footer-links">
+                    <li><a href="logo.html">PFP Generator</a></li>
+                    <li><a href="wall.html">Wallpapers</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPL-3.0 License</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-6xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-4">
-                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em]">
-                    © 2026 AVAOS PROJECT // NOT AFFILIATED WITH MICROSOFT
-                </p>
-            </div>
-            <div class="flex gap-6">
-                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">GPL-3.0</span>
-                <span class="text-[9px] text-gray-700 uppercase font-black tracking-widest px-3 py-1 border border-white/5 rounded transition hover:border-blue-600/50 hover:text-white cursor-default">Open Source</span>
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 AVAOS PROJECT // NOT AFFILIATED WITH MICROSOFT</p>
+            <div class="footer-badges">
+                <span class="badge">GPL-3.0</span>
+                <span class="badge">Open Source</span>
             </div>
         </div>
     </footer>
